@@ -1,0 +1,61 @@
+server:
+  port: 0
+
+spring:
+  devtools:
+    restart:
+      enabled: false
+  application:
+    name: order-service
+#  zipkin:
+#    base-url: http://localhost:9411
+#    enabled: true
+#  sleuth:
+#    sampler:
+#      probability: 1.0
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mariadb://localhost:3306/mydb
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password: Netand141)
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:testdb
+#    username: sa
+#    password:
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+logging:
+  level:
+    com.example.userservice.client: DEBUG
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0 # 발생된 로그를 어느 빈도수로 zipkin 애 전달하겠는가 1.0 = 100%
+    propagation:
+      consume: B3
+      produce: B3_MULTI
+    zipkin:
+      tracing:
+        endpoint: "http://localhost:9411/api/v2/spans"
+  endpoints:
+    web:
+      exposure:
+        include: health, httptrace, info, metrics, prometheus, info, prometheus, metrics

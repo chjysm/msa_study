@@ -1,0 +1,63 @@
+server:
+  port: 0
+greeting:
+  message: Welcome to the Simple E-Commerce
+
+logging:
+  level:
+    com.example.userservice.client: DEBUG
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+
+#token:
+#  expiration_time: 86400000
+#  secret: user_token
+
+spring:
+  devtools:
+    restart:
+      enabled: false
+  application:
+    name: user-service
+#  rabbitmq:
+#    host: 127.0.0.1
+#    port: 5672
+#    username: guest
+#    password: guest
+#  datasource:
+#    url: jdbc:h2:mem:testdb
+#    username: sa
+  jpa:
+    hibernate:
+      ddl-auto: update # 시작할 때 새로 생성 하고 세션을 마칠 때 스키마를 소멸 시킵니다.
+    show-sql: true
+  h2:
+    console:
+      enabled: true # 콘솔 사용하겠다
+      settings:
+        web-allow-others: true # 웹 접근 가능
+      path: /h2-console
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0 # 발생된 로그를 어느 빈도수로 zipkin 애 전달하겠는가 1.0 = 100%
+    propagation:
+      consume: B3
+      produce: B3_MULTI
+    zipkin:
+      tracing:
+        endpoint: "http://localhost:9411/api/v2/spans"
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, bus-refresh, info, prometheus, metrics

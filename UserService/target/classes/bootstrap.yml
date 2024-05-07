@@ -1,0 +1,6 @@
+# bootstrap 으로 설정하면 우선순위가 application.yml 보다 높다
+spring:
+  cloud:
+    config:
+      uri: http://127.0.0.1:8888 # config 서버 주소
+      name: user-service # yml 파일 이름
